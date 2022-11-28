@@ -21,6 +21,11 @@ const Mostrar = () => {
     const getProductos = async () => {
         const data = await getDocs(productosCollection);
         console.log(data.docs);
+
+        setProductos(
+        data.docs.map( (doc) => ({...doc.data(), id:doc.id}))
+        );
+        console.log(productos);
     }
 
     //6 aplicamos el useEffect para la bajada 

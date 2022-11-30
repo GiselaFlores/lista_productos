@@ -59,7 +59,7 @@ const Mostrar = () => {
                 <table className='table table-dark table-hover'>
                     <thead>
                         <tr>
-                            <th>Descripción</th>
+                            <th>Nombre</th>
                             <th>Precio</th>
                             <th>Stock</th>
                             <th>Actiones</th>
@@ -68,9 +68,9 @@ const Mostrar = () => {
                     <tbody className='text-light'>
                         { productos.map((produc)=>(
                             <tr key={produc.id}>
-                                <td key={produc.Nombre} className='text-light'></td>
-                                <td key={produc.Precio} className='text-light'></td>
-                                <td key={produc.Stock} className='text-light'></td>
+                                <td key={produc.Nombre} className='text-light'>{produc.Nombre}</td>
+                                <td key={produc.Precio} className='text-light'>{produc.Precio}</td>
+                                <td key={produc.Stock} className='text-light'>{produc.Stock} </td>
                                 <td>
                                     <Link to={`/editarproducto/${produc.id}`} className="btn btn-light"><i className="fa-solid fa-pen-to-square"></i></Link>
                                     <button onClick={()=>{deleteProducto(produc.id)}}><i className="fa-solid fa-trash"></i></button>

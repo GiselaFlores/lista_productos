@@ -16,6 +16,7 @@ function App() {
         <Route path='/editarproducto' element={<Editar/>}/>
       </Routes>
     </BrowserRouter>
+    
     </div>
   );
 }

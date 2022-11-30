@@ -1,38 +1,38 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
-import { collection, getDocs, getDoc, deleteDoc, doc} from 'firebase/firestore';
-import {db} from '../firebaseConfig/firebase';
+import {collection, getDocs, getDoc, deleteDoc, doc} from 'firebase/firestore';
+import { db } from '../firebaseConfig/firebase';
 import Swal from 'sweetalert2';
 import {async} from '@firebase/util';
-import withReactContent from "sweetalert2-react-content";
+import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
 
 const Mostrar = () => {
 
-    // 1 configuración de los hook de mostrar 
+    //1 configuración de los hook de mostrar
 
     const [productos, setProductos] = useState([]);
 
-    // 2 referenciamos a la db de firebase
+    //2 referenciar la db de firebase
 
-    const productosColletion = collection(db, "Productos");
+    const productosCollection = collection(db, "Productos");
 
-    // 3 creamos la función para mostrar los documentos con asincronismo
+    //3 creamos la funcionabilidad para mostrar los documentos con asincronismo
 
-    const getProductos = async () => {
-        const data = await getDocs(productosColletion)
-        console.log(data.docs)
+    const getProductos = async ()=> {
+        const data = await getDocs(productosCollection); 
+        //console.log(data.docs);
 
         setProductos(
-            data.docs.map( (doc)=>({id:doc.id}))
+           data.docs.map((doc)=>({...doc.data(), id:doc.id}))
         );
         console.log(productos);
     }
 
-    // 4 crear la función para eliminar registros
+    //4 declaración función delete para eliminar registros
 
-    const deleteProducto = async (id) =>{
+    const deleteProducto = async (id)=>{
         const productoDoc = doc(db, "Productos", id);
         await deleteDoc(productoDoc);
         getProductos();
@@ -41,43 +41,43 @@ const Mostrar = () => {
     //5 configuración sweetalert
 
 
-    //6 declaramos el useeffect
+    //6 declaramos el useEffect
 
-    useEffect( ()=> {
+    useEffect(()=>{
         getProductos();
     }, [])
 
-
-    //7 mostrar datos estructura
+    //7 mostrar datos en estructura
 
   return (
     <div className='container'>
         <div className='row'>
             <div className='col'>
                 <div className='d-grid gap-2'>
-                    <link to="/crearproducto" className='btn btn-secondary mt-2 mb-2' ><i className="fa-solid fa-plus"></i></link>
+                    <Link to="/crearproducto" className='btn btn-secondary mt-2 mb-2' ><i className="fa-solid fa-plus"></i></Link>
                 </div>
                 <table className='table table-dark table-hover'>
                     <thead>
                         <tr>
-                            <th>Nombre</th>
+                            <th>Descripción</th>
                             <th>Precio</th>
                             <th>Stock</th>
                             <th>Actiones</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className='text-light'>
                         { productos.map((produc)=>(
                             <tr key={produc.id}>
-                                <td key={produc.Nombre}></td>
-                                <td key={produc.Precio}></td>
-                                <td key={produc.Stock}></td>
+                                <td key={produc.Nombre} className='text-light'></td>
+                                <td key={produc.Precio} className='text-light'></td>
+                                <td key={produc.Stock} className='text-light'></td>
                                 <td>
-                                    <Link to={`/editarproducto/${produc.id}`} className="btn btn-light"><i className="fa-solid fa-pen-to-square"></i></link>
-                                    <button><i className="fa-solid fa-trash"></i></button>
+                                    <Link to={`/editarproducto/${produc.id}`} className="btn btn-light"><i className="fa-solid fa-pen-to-square"></i></Link>
+                                    <button onClick={()=>{deleteProducto(produc.id)}}><i className="fa-solid fa-trash"></i></button>
                                 </td>
                             </tr>
                         ))}
+
                     </tbody>
                 </table>
             </div>

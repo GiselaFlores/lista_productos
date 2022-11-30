@@ -13,10 +13,10 @@ function App() {
       <Routes>
         <Route path='/' element={<Mostrar/>}/>
         <Route path='/crearproducto' element={<Crear/>}/>
-        <Route path='/editarproducto' element={<Editar/>}/>
+        <Route path='/editarproducto/:id' element={<Editar/>}/>
       </Routes>
     </BrowserRouter>
-    
+
     </div>
   );
 }

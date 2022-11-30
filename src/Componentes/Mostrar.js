@@ -39,7 +39,27 @@ const Mostrar = () => {
     }
 
     //5 configuración sweetalert
+    const confirmDelete = (id) => {
+        Swal.fire({
+            title: 'Vas a eliminar el producto?',
+            text: "Seguro de querer eliminarlo!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Borrar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+            deleteProducto(id);
+            Swal.fire(
+                'Borrado',
+                'El producto fue eliminado.',
+                'Listo'
+            )
+            }
+        })
 
+    }
 
     //6 declaramos el useEffect
 
@@ -73,7 +93,7 @@ const Mostrar = () => {
                                 <td key={produc.Stock} className='text-light'>{produc.Stock} </td>
                                 <td>
                                     <Link to={`/editarproducto/${produc.id}`} className="btn btn-light"><i className="fa-solid fa-pen-to-square"></i></Link>
-                                    <button onClick={()=>{deleteProducto(produc.id)}}><i className="fa-solid fa-trash"></i></button>
+                                    <button onClick={()=>{confirmDelete(produc.id)}}><i className="fa-solid fa-trash"></i></button>
                                 </td>
                             </tr>
                         ))}

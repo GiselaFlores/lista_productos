@@ -12,8 +12,8 @@ const Editar = () => {
     //1 estado para el form
     const [form, setForm] = useState({
         Nombre: "",
-        Precio:0,
-        Stock:0
+        Precio:"",
+        Stock:""
     });
 
     const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Editar = () => {
     const cambio = (e)=>{
         setForm({
             ...form,
-            [e.target.value]: e.target.value
+            [e.target.name]: e.target.value
         });
     };
 
@@ -52,7 +52,7 @@ const Editar = () => {
             Precio: form.Precio,
             Stock: form.Stock
         };
-        await updateDoc(producto.data());
+        await updateDoc(producto.data);
         alertaGuardado();
         navigate("/");
     }
@@ -88,40 +88,43 @@ const Editar = () => {
         <div className='row'>
              <div className='col'>
 
-             <h1>Editar el Producto</h1>
+             <h1 className='mt-3 text-light'>Editar el Producto</h1>
 
-             <form onSubmit={update}>
-                <div className='mb-3'>
-                    <label className='form-label'>Nombre:</label>
+             <form onSubmit={update} className="mt-5">
+                <div className='mb-4'>
+                    <label className='form-label h3 text-light'>Nombre:</label>
                     <input 
+                        name='Nombre'
                         value={form.Nombre}
                         type="text"
-                        className='form-control'
+                        className='form-control w-50 m-auto'
                         onChange={cambio}
                     />
                 </div>
 
-                <div className='mb-3'>
-                <label className='form-label'>Precio:</label>
+                <div className='mb-4'>
+                <label className='form-label h3 text-light'>Precio:</label>
                 <input 
+                    name="¨Precio"
                     value={form.Precio}
                     type="text"
-                    className='form-control'
+                    className='form-control w-50 m-auto'
                     onChange={cambio}
                 />
                 </div>
 
                 <div className='mb-3'>
-                <label className='form-label'>Stock:</label>
+                <label className='form-label h3 text-light'>Stock:</label>
                 <input 
+                    name="Stock"
                     value={form.Stock}
                     type="text"
-                    className='form-control'
+                    className='form-control w-50 m-auto'
                     onChange={cambio}
                 />
                 </div>
 
-                <button type="submit" className='btn btn-primary'>Guardar</button>
+                <button type="submit" className='btn btn-outline-light btn-lg mt-3'>Guardar</button>
              
              </form>
              </div>

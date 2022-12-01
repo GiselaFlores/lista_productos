@@ -74,7 +74,7 @@ const Mostrar = () => {
         <div className='row'>
             <div className='col'>
                 <div className='d-grid gap-2'>
-                    <Link to="/crearproducto" className='btn btn-secondary mt-2 mb-2' ><i className="fa-solid fa-plus"></i></Link>
+                    <Link to="/crearproducto" className='btn btn-outline-light btn-lg mt-3 mb-4 w-25' >Crear Nuevo Producto  <i className="fa-solid fa-plus"></i></Link>
                 </div>
                 <table className='table table-dark table-hover'>
                     <thead>
@@ -93,7 +93,7 @@ const Mostrar = () => {
                                 <td key={produc.Stock} className='text-light'>{produc.Stock} </td>
                                 <td>
                                     <Link to={`/editarproducto/${produc.id}`} className="btn btn-light"><i className="fa-solid fa-pen-to-square"></i></Link>
-                                    <button onClick={()=>{confirmDelete(produc.id)}}><i className="fa-solid fa-trash"></i></button>
+                                    <button onClick={()=>{confirmDelete(produc.id)}} className="bg-danger"><i className="fa-solid fa-trash "></i></button>
                                 </td>
                             </tr>
                         ))}

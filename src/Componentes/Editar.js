@@ -1,98 +1,133 @@
-import {useNavigate, useParams } from "react-router-dom";
-import React, {useState, useEffect} from'react';
-import {getDoc, updateDoc, doc} from 'firebase/firestore';
-import {db} from '../firebaseConfig/firebase';
-
+import React, {useState, useEffect} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
+import {getDoc, doc, updateDoc} from 'firebase/firestore';
+import { db } from '../firebaseConfig/firebase';
+import { dbCollections } from '../firebaseConfig/collections';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
 
 const Editar = () => {
 
-    //1 declarar hooks
+    //1 estado para el form
+    const [form, setForm] = useState({
+        Nombre: "",
+        Precio:0,
+        Stock:0
+    });
 
-    const [nombre, setNombre] = useState("");
-    const [precio, setPrecio] = useState(0);
-    const [stock, setStock] = useState(0);
     const navigate = useNavigate();
-    const {id} = useParams();
+    const {id} =useParams();
 
-    //2 declaramos la función update
+    //2 función para asignar valores al formulario
 
-    const update = async(e) => {
+    const cambio = (e)=>{
+        setForm({
+            ...form,
+            [e.target.value]: e.target.value
+        });
+    };
+
+    //3 alerta de guardado
+
+    const alertaGuardado = ()=>{
+        Swal.fire({
+        title: 'Registro modificado y guardado',
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+        }
+        });
+    }
+
+    //4 declaramos el función update
+
+    const update = async (e)=>{
         e.preventDefault();
-        const producto = doc(db, "Producto", id);
-        const data = {Nombre: nombre, Precio: precio, Stock: stock};
-        await updateDoc(producto, data);
+        const producto = doc(db, dbCollections.Productos, id);
+        const data = {
+            Nombre: form.Nombre,
+            Precio: form.Precio,
+            Stock: form.Stock
+        };
+        await updateDoc(producto.data());
+        alertaGuardado();
         navigate("/");
     }
 
-    //3 declarar el asincronismo del producto
+    //5 asincronismo de existencia con la bd
 
-    const getProductoById = async (id)=>{
-        const producto = await getDoc(doc(db, "Producto", id));
-        if(producto.exists){
-            console.log(producto.data());
-            setNombre(producto.data().nombre);
-            setPrecio(producto.data().precio);
-            setStock(producto.data().stock);
+    const getProductoById = async (id) =>{
+        const producto = await getDoc(doc(db, dbCollections.Productos, id));
+        console.log(producto.data());
+
+        if (producto.exists()){
+            setForm({
+                Nombre: producto.data().Nombre,
+                Precio: producto.data().Precio,
+                Stock: producto.data().Stock 
+            });
         }
         else{
             console.log("no existe");
         }
-    }
+    };
 
-    //4 declaramos el useEffect
-
+    //6 useEffect
+    
     useEffect(()=>{
         getProductoById(id);
-    }, [])
+    }, [id])
 
-    //7 estructura a mostrar
+    //7 estructura para mostrar
 
   return (
-    <div className='container mt-2'>
+    <div className='container'>
         <div className='row'>
-            <div className='col'>
-                <h1>Editar un Producto</h1>
+             <div className='col'>
 
-                <form onSubmit={update}>
-                    <div className="mb-3">
-                        <label className="form-label">Nombre:</label>
-                        <input 
-                            value={nombre}
-                            type="text"
-                            className="form-control"
-                            onChange={(e)=> setNombre(e.target.value)}
-                        />
-                    </div>
+             <h1>Editar el Producto</h1>
 
-                    <div className="mb-3">
-                    <label className="form-label">Precio:</label>
+             <form onSubmit={update}>
+                <div className='mb-3'>
+                    <label className='form-label'>Nombre:</label>
                     <input 
-                        value={precio}
+                        value={form.Nombre}
                         type="text"
-                        className="form-control"
-                        onChange={(e)=> setPrecio(e.target.value)}
+                        className='form-control'
+                        onChange={cambio}
                     />
                 </div>
 
-                <div className="mb-3">
-                <label className="form-label">Stock:</label>
+                <div className='mb-3'>
+                <label className='form-label'>Precio:</label>
                 <input 
-                    value={stock}
+                    value={form.Precio}
                     type="text"
-                    className="form-control"
-                    onChange={(e)=> setStock(e.target.value)}
+                    className='form-control'
+                    onChange={cambio}
                 />
                 </div>
 
-                <button type="submit" className="btn btn-primary mt-2">Enviar</button>
+                <div className='mb-3'>
+                <label className='form-label'>Stock:</label>
+                <input 
+                    value={form.Stock}
+                    type="text"
+                    className='form-control'
+                    onChange={cambio}
+                />
+                </div>
 
-                </form>
-
-            </div>
+                <button type="submit" className='btn btn-primary'>Guardar</button>
+             
+             </form>
+             </div>
         </div>
     </div>
   )
 }
 
 export default Editar;
-

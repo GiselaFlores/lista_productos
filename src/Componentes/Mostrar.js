@@ -11,27 +11,30 @@ const MySwal = withReactContent(Swal);
 const Mostrar = () => {
 
     //1 configuración de los hook de mostrar
+    const productosCollection = collection(db, "Productos");
 
     const [productos, setProductos] = useState([]);
 
     //2 referenciar la db de firebase
 
-    const productosCollection = collection(db, "Productos");
 
     //3 creamos la funcionabilidad para mostrar los documentos con asincronismo
 
-    const getProductos = async ()=> {
+    const getProductos = async ()=> { 
         const data = await getDocs(productosCollection); 
-        //console.log(data.docs);
-
+        console.log(data.docs);
+ 
         setProductos(
            data.docs.map((doc)=>({...doc.data(), id:doc.id}))
-        );
-        console.log(productos);
+        ); 
+       
     }
-
+    useEffect(()=>{
+        getProductos();
+        
+    }, [])
     //4 declaración función delete para eliminar registros
-
+    console.log(productos);
     const deleteProducto = async (id)=>{
         const productoDoc = doc(db, "Productos", id);
         await deleteDoc(productoDoc);
@@ -62,10 +65,8 @@ const Mostrar = () => {
     }
 
     //6 declaramos el useEffect
+ 
 
-    useEffect(()=>{
-        getProductos();
-    }, [])
 
     //7 mostrar datos en estructura
 
@@ -88,9 +89,9 @@ const Mostrar = () => {
                     <tbody className='text-light'>
                         { productos.map((produc)=>(
                             <tr key={produc.id}>
-                                <td key={produc.Nombre} className='text-light'>{produc.Nombre}</td>
-                                <td key={produc.Precio} className='text-light'>{produc.Precio}</td>
-                                <td key={produc.Stock} className='text-light'>{produc.Stock} </td>
+                                <td key={produc.Nombre} className='text-light'>{produc.Nombre || ''}</td>
+                                <td key={produc.Precio} className='text-light'>{produc.Precio || ''}</td>
+                                <td key={produc.Stock} className='text-light'>{produc.Stock || ''} </td>
                                 <td>
                                     <Link to={`/editarproducto/${produc.id}`} className="btn btn-light"><i className="fa-solid fa-pen-to-square"></i></Link>
                                     <button onClick={()=>{confirmDelete(produc.id)}} className="bg-danger"><i className="fa-solid fa-trash "></i></button>

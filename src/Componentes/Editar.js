@@ -52,7 +52,7 @@ const Editar = () => {
             Precio: form.Precio,
             Stock: form.Stock
         };
-        await updateDoc(producto.data);
+        await updateDoc(producto, data);
         alertaGuardado();
         navigate("/");
     }
